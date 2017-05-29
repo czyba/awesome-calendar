@@ -1,12 +1,13 @@
 --
 -- Calendar module for Awesome 3.5 WM
--- 
+--
 -- Based on: http://awesome.naquadah.org/wiki/Calendar_widget
 -- Modified by: Maxim Andreev <andreevmaxim@gmail.com>
--- GitHub: https://github.com/cdump/awesome-calendar 
+-- Forked from: https://github.com/cdump/awesome-calendar
+-- Github: https://github.com/czyba/awesome-calendar
 --
 -- Add to rc.lua:
--- local calendar = require("calendar35")
+-- local calendar = require("calendar40")
 -- ..
 -- calendar.addCalendarToWidget(widget_datetime)
 --
@@ -20,12 +21,13 @@ local capi = {
 }
 local awful = require("awful")
 local naughty = require("naughty")
-module("calendar35")
+module("calendar40")
 
 local calendar = {}
 local current_day_format = '<span color="#ee7777"><b>%s</b></span>'
 
 function displayMonth(month,year,weekStart)
+    local today = os.date("%Y-%m-%d")
     local t,wkSt=os.time{year=year, month=month+1, day=0},weekStart or 1
     local d=os.date("*t",t)
     local mthDays,stDay=d.day,(d.wday-d.day-wkSt+1)%7
@@ -40,29 +42,26 @@ function displayMonth(month,year,weekStart)
 
     local writeLine = 1
     while writeLine < (stDay + 1) do
-        lines = lines .. "    "
+        lines = lines .. "     "
         writeLine = writeLine + 1
     end
 
     for d=1,mthDays do
-        local x = d
+        local x = string.format("%3i", d)
         local t = os.time{year=year,month=month,day=d}
         if writeLine == 8 then
             writeLine = 1
             lines = lines .. "\n"
         end
-        if os.date("%Y-%m-%d") == os.date("%Y-%m-%d", t) then
-            x = string.format(current_day_format, d)
-        end
-        if (#(tostring(d)) == 1) then
-            x = " " .. x
+        if today == os.date("%Y-%m-%d", t) then
+            x = string.format(current_day_format, x)
         end
         lines = lines .. "  " .. x
         writeLine = writeLine + 1
     end
-    local header = "<b><i>" .. os.date("%B, %Y", os.time{year=year,month=month,day=1}) .. "</i></b>\n"
+    local header = "<b>" .. os.date("%B, %Y", os.time{year=year,month=month,day=1}) .. "</b>\n"
 
-    return header .. "\n" .. lines
+    return header .. "\n" .. lines .. "\n"
 end
 
 function switchNaughtyMonth(switchMonths)
