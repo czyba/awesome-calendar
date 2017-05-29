@@ -71,7 +71,7 @@ function switchNaughtyMonth(switchMonths)
 
     calendar_new = { calendar[1], calendar[2],
     naughty.notify({
-        text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(calendar[1], calendar[2], 2)),
+        text = string.format('<span font_desc="%s">%s</span>', "monospace", displayMonth(calendar[1], calendar[2])),
         timeout = 0,
         hover_timeout = 0.5,
         screen = capi.mouse.screen,
